@@ -1,9 +1,12 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import base64
 from PIL import Image
 import io
+import os
 
 app = Flask(__name__)
+CORS(app)
 
 def generate_description_from_image(image):
     return "This is a generated description for the uploaded image."
@@ -23,4 +26,5 @@ def generate_description():
     return jsonify({"description": description}), 200
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5000)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
