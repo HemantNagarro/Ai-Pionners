@@ -78,7 +78,7 @@ if st.button("Generate Description"):
         image.save(buffered, format="JPEG")
         img_str = base64.b64encode(buffered.getvalue()).decode()
 
-        url = "http://localhost:5000/generate"  # Web service URL
+        url = "http://0.0.0.0:10000/generate"  # Web service URL
         response = requests.post(url, json={"image_data": img_str})
 
         if response.status_code == 200:
