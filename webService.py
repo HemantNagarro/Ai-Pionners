@@ -4,6 +4,7 @@ import base64
 from PIL import Image
 import io
 from imageCaptioningModel import loadModel
+from descriptionGenartorModel import generateDescription
 
 app = Flask(__name__)
 CORS(app)
@@ -13,7 +14,8 @@ caption_model = None
 def generate_description_from_image(image_path):
     captions = caption_model(img_path=image_path)
     caption_set = set(captions.split(',')) 
-    return list(caption_set)
+    updated_set = set(caption_set)
+    return generateDescription(list(updated_set))
 
 @app.before_request
 def load_model_once():
@@ -39,5 +41,4 @@ def generate_description():
     return jsonify({"description": description}), 200
 
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+    app.run(host="0.0.0.0", port=5000)

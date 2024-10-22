@@ -7,3 +7,5 @@ tensorflow
 tqdm
 huggingface_hub
 pandas
+transformers
+tensorflow
