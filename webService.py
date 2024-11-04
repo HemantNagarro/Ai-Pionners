@@ -15,7 +15,10 @@ def generate_description_from_image(image_path):
     captions = caption_model(img_path=image_path)
     caption_set = set(captions.split(',')) 
     updated_set = set(caption_set)
-    return generateDescription(list(updated_set))
+    print(updated_set)
+    result = generateDescription(list(updated_set))
+    print(result)
+    return result[0]
 
 @app.before_request
 def load_model_once():

@@ -18,7 +18,7 @@ st.markdown(
         color: #4CAF50;
         font-size: 2.8em;
         text-align: center;
-        margin-top: 5px; 
+        margin-top: 0px; 
         margin-bottom: 20px;
     }
 
@@ -55,7 +55,7 @@ st.markdown(
 )
 
 # Title of the app
-st.title("Image Description Generator")  # The title is now center-aligned with reduced padding above
+st.title("Image Description Generator")
 
 # Divider for better sectioning
 st.markdown('<div class="stDivider"></div>', unsafe_allow_html=True)
@@ -65,6 +65,9 @@ option = st.radio("Choose how to provide the image:", ("Upload Image", "Enter Im
 
 # Initialize the image variable to store the uploaded or fetched image
 image = None
+
+# Set a static height for the image
+static_image_height = 300  # Set static image height
 
 # Based on selected option, show image uploader or text input for URL
 if option == "Upload Image":
@@ -90,23 +93,22 @@ elif option == "Enter Image URL":
 st.markdown('<div class="stDivider"></div>', unsafe_allow_html=True)
 
 # Split the layout into two columns
-col1, col2 = st.columns(2)
+col1, col2 = st.columns([1, 1])  # Keep the columns balanced
 
-# Display the image in the left column
+# Display the image in the left column with a fixed height
 with col1:
     st.subheader("Uploaded Image")
     if image is not None:
+        # Resize the image to have a fixed height while maintaining the aspect ratio
+        image = image.resize((int(image.width * (static_image_height / image.height)), static_image_height))
         st.image(image, caption="Uploaded Image", use_column_width=True)
     else:
         st.warning("Please upload an image or enter a valid URL.")
 
-# Generate description in the right column
+# Display the generated description in the right column, aligned to the top
 with col2:
     st.subheader("Generated Description")
-    description = ""
-
-# Divider for better sectioning
-st.markdown('<div class="stDivider"></div>', unsafe_allow_html=True)
+    description = ""  # This will hold the generated description
 
 # Generate button below the two columns, centrally aligned
 if st.button("Generate Description"):
@@ -123,8 +125,10 @@ if st.button("Generate Description"):
             if response.status_code == 200:
                 result = response.json()
                 description = result['description']
+                
+                # Set the text area height to match the static image height
                 with col2:
-                    st.text_area("Generated Description", value=description, height=200)
+                    st.text_area("Generated Description", value=description, height=static_image_height)
             else:
                 st.error(f"Error: Unable to generate description. Status code: {response.status_code}")
                 st.write("Response content:", response.content)
